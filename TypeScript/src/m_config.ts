@@ -8,31 +8,42 @@ function readTsConfig() {
     const tsConfigContent = fs.readFileSync(tsConfigPath, "utf-8");
     const tsConfig = JSON.parse(tsConfigContent);
     
-    // Interpolate config values
-    const interpolatedConfig = interpolateValues(tsConfig);
-    
-    return interpolatedConfig;
+  
+    return tsConfig;
 }
 
-function interpolateValues(config: any): any {
-    const jsonParams = {
-        param1: "value1",
-        param2: "value2",
-        // Add more JSON parameters as needed
-    };
+        function getStringBetweenCurlyBrackets(value: string): string | null {
+            const regex = /{([^}]+)}/;
+            const match = value.match(regex);
+            return match ? match[1] : null;
+        }
 
-    const interpolatedConfig = JSON.stringify(config, (key, value) => {
-        if (typeof value === "string" && value.includes("{") && value.includes("}")) {
-            const paramKey = value.substring(value.indexOf("{") + 1, value.indexOf("}"));
-            if (jsonParams.hasOwnProperty(paramKey)) {
-                return value.replace(`{${paramKey}}`, jsonParams[paramKey]);
+function walkJsonTree(obj: any, callback: (key: string, value: any) => void) {
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            const value = obj[key];
+
+            if (typeof value === "string" && value.includes("{") && value.includes("}")) {
+                const m_result = getStringBetweenCurlyBrackets(value);
+                if (m_result) {
+                    if (obj.hasOwnProperty(m_result)) {
+                        obj[key] = value.replace(`{${m_result}}`, obj[m_result]);
+                    }
+                }
+            }
+            callback(key, value);
+            if (typeof value === "object" && value !== null) {
+                walkJsonTree(value, callback);
             }
         }
-        return value;
-    });
-
-    return JSON.parse(interpolatedConfig);
+    }
 }
 
-const tsConfig = readTsConfig();
-console.log(tsConfig);
+// Usage example:
+const config = readTsConfig();
+walkJsonTree(config, (key, value) => {
+    // console.log(`Key: ${key}, Value: ${value}`);
+});
+
+// const tsConfig = readTsConfig();
+console.log(config);
