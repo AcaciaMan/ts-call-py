@@ -1,0 +1,9 @@
+{"py_app": {
+    "python_path": "C:/Tools/Python312/python.exe",
+    "package_path": "C:/work/GitHub/ts-call-py/Python",
+    "child_process": "{package_path}/tests/child_process_test.py",
+    "cwd": "{package_path}",
+    "env": {
+        "PYTHONPATH": "{package_path}/src"
+    }
+}}
