@@ -27,6 +27,6 @@ for i in range(2):
     # read 'length' bytes and pass to json parser
     os.write(1,b'received message...')
 
-    print('something', i)
-    print(anything.decode('latin-1'))
+    print('something', i, flush=True)
+    print(anything.decode('latin-1'), flush=True)
     sleep(3)

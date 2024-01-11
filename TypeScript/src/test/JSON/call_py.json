@@ -1,5 +1,5 @@
 {"imports": ["import Yaml", "import os"],
 "declarations": [{"m_args": "{something: 1}"}],
 "code":"m_result = Yaml.dump(m_args)",
-"return": "os.write(1, m_result.encode('latin-1'))"
+"return": "m_result"
 }
