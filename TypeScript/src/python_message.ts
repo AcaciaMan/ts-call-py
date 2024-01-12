@@ -4,10 +4,6 @@ export enum python_message_type {
   m_json = "json",
 }
 
-export type JsonStructure = {
-  [key: string]: object;
-};
-
 export interface python_message {
   type: python_message_type;
   received_data: Buffer;
@@ -19,7 +15,7 @@ export interface python_message {
 
 export interface python_script extends python_message {
   imports: string[];
-  declarations: JsonStructure[];
+  declarations: object[];
   code: string[];
   m_return: string;
 }
@@ -70,7 +66,7 @@ decode(data): void {
         if(startIndex > 0) {
             console.log(
               "recout:",
-              jsonString.substring(3, startIndex + startMarker.length)
+              jsonString.substring(0, startIndex)
             );
         }
 
@@ -89,7 +85,7 @@ decode(data): void {
 
 export class PythonScript extends PythonMessage implements python_script {
   imports: string[];
-  declarations: JsonStructure[];
+  declarations: object[];
   code: string[];
   m_return: string;
   constructor() {

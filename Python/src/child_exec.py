@@ -1,3 +1,4 @@
+import json
 from typing import Any
 from child_message import ChildMessage, ChildMessageType
 
@@ -42,8 +43,18 @@ class ChildExecScript(ChildExec):
         """
         docstring
         """
-
         self.execs = []
+        print('here', flush=True)
+        if 'imports' in self.message.json_object:
+            for x in self.message.json_object['imports']:
+                print('here1', x, flush=True)
+                self.execs.append(x)
+
+        if 'declarations' in self.message.json_object:
+            for x in self.message.json_object['declarations']:
+                for y in x.keys():
+                    self.execs.append(y + ' = ' + json.dumps(x[y]))
+
         return self
 
 class ChildExecFactory(object):
@@ -55,8 +66,15 @@ class ChildExecFactory(object):
         """
         docstring
         """
+        print('here2', flush=True)
+        if (message.json_object is None):
+            return ChildExec()
+        
+        print('here3', flush=True)
         if 'type' in message.json_object:
-            if message.json_object['type'] == ChildMessageType.python_script:
+            print(message.json_object['type'], flush=True)
+            if message.json_object['type'] == ChildMessageType.python_script.name:
+                print('here5', flush=True)
                 childExecScript = ChildExecScript()
                 childExecScript.message = message
                 return childExecScript
