@@ -19,7 +19,7 @@ export interface python_message {
 
 export interface python_script extends python_message {
   imports: string[];
-  declarations: JsonStructure;
+  declarations: JsonStructure[];
   code: string[];
   m_return: string;
 }
@@ -89,7 +89,7 @@ decode(data): void {
 
 export class PythonScript extends PythonMessage implements python_script {
   imports: string[];
-  declarations: JsonStructure;
+  declarations: JsonStructure[];
   code: string[];
   m_return: string;
   constructor() {
@@ -100,7 +100,7 @@ export class PythonScript extends PythonMessage implements python_script {
 /*
 const generatedJson: PythonScript = new PythonScript();
 generatedJson.imports = ["import Yaml", "import os"];
-generatedJson.declarations = { m_args: {something: 1}, m_result: null };
+generatedJson.declarations = [{ m_args: {something: 1}}, {m_result: null }];
 generatedJson.code = ["m_result = Yaml.dump(m_args)"];
 generatedJson.return = "m_result";
 */

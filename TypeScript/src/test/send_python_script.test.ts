@@ -6,7 +6,7 @@ describe("sendPythonScript", () => {
     const pythonScript = new PythonScript();
 
     pythonScript.imports = ["import Yaml", "import os"];
-    pythonScript.declarations = { m_args: { something: 1 }, m_result: null };
+    pythonScript.declarations = [{ m_args: { something: 1 }}, {m_result: null }];
     pythonScript.code = ["m_result = Yaml.dump(m_args)"];
     pythonScript.m_return = "m_result";
 

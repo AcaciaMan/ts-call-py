@@ -1,6 +1,14 @@
 from typing import Any
 from child_message import ChildMessage, ChildMessageType
 
+from typing import TypedDict
+
+class PythonScriptType(TypedDict):
+    imports: list
+    declarations: list
+    code: list
+    m_return: str
+
 
 class ChildExec(object):
     """
@@ -34,7 +42,7 @@ class ChildExecScript(ChildExec):
         """
         docstring
         """
-        
+
         self.execs = []
         return self
 
