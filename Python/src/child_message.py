@@ -2,6 +2,17 @@ import base64
 import json
 import os
 
+from enum import IntEnum
+
+
+class ChildMessageType(IntEnum):
+    """
+    docstring
+    """
+    python_script = 1,
+    param = 2,
+    m_json = 3
+
 class ChildMessage(object):
     """
     docstring
@@ -52,3 +63,5 @@ class ChildMessage(object):
         docstring
         """
         os.write(1, self.encode().encode('latin1'))
+        self.decoded_message = None
+        self.json_object = None

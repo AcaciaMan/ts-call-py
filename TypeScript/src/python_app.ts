@@ -6,6 +6,7 @@ export class PythonApp {
   private _child: ChildProcess;
   public app_params: any;
   public result: any;
+  public python_message = new PythonMessage(python_message_type.m_json);
 
   constructor(app_id: string) {
     this.app_id = app_id;
@@ -44,13 +45,10 @@ export class PythonApp {
     );
 
     if (this.child.stdout) {
-      this.child.stdout.on("data", (data: Buffer) => {
-        
-        const python_message = new PythonMessage(python_message_type.m_json);
-        python_message.decode(data);
-        this.result = python_message.received_json;
-        console.log(`stdout: ${this.result}`);
-
+      this.child.stdout.on("data", (data) => {
+        this.python_message.decode(data);
+        this.result = this.python_message.received_json;
+        console.log("stdout:", this.result);
       });
     }
 
@@ -63,8 +61,12 @@ export class PythonApp {
     return this.child;
   }
 
-  public send(message: string): void {
+  public new_result(): void {
+    this.python_message.received_json = null;
+    this.result = null;
+  }
 
+  public send(message: string): void {
     this.child.send(message, (error: Error | null) => {
       if (error) {
         console.log(

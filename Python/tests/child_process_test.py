@@ -19,7 +19,7 @@ for i in range(2):
     
 
     exec("""
-print(json.dumps(child_message.json_object).encode(), i, flush=True)
+# print(json.dumps(child_message.json_object).encode(), i, flush=True)
 print('something', i, flush=True)         
     """)
 
