@@ -1,5 +1,6 @@
-{"imports": ["import Yaml", "import os"],
+{
+"imports": ["import Yaml", "import os"],
 "declarations": [{"m_args": "{something: 1}"}],
-"code":"m_result = Yaml.dump(m_args)",
+"code":["m_result = Yaml.dump(m_args)"],
 "return": "m_result"
 }

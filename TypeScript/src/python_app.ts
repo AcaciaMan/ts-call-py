@@ -42,39 +42,41 @@ export class PythonApp {
       }
     );
 
+    if (this.child.stdout) {
+      this.child.stdout.on("data", (data: Buffer) => {
+        console.log(`stdout: ${data}`);
+        this.result = data;
+      });
+    }
 
-        if (this.child.stdout) {
-          this.child.stdout.on("data", (data: Buffer) => {
-            console.log(`stdout: ${data}`);
-            this.result = data;
-          });
-        }
-
-        if (this.child.stderr) {
-          this.child.stderr.on("data", (data: Buffer) => {
-            console.log(`stderr: ${data}`);
-          });
-        }
+    if (this.child.stderr) {
+      this.child.stderr.on("data", (data: Buffer) => {
+        console.log(`stderr: ${data}`);
+      });
+    }
 
     return this.child;
   }
 
   public send(message: string): void {
-    this.child.send(message, (error: Error | null) => { 
-        if (error) {
-            console.log("Error sending message to Python subprocess: " + error.message);
-        }});
+    const modifiedMessage = "#$%" + message + "%$#";
 
-        
+    this.child.send(modifiedMessage, (error: Error | null) => {
+      if (error) {
+        console.log(
+          "Error sending message to Python subprocess: " + error.message
+        );
+      }
+    });
   }
-public async waitUntilResult(): Promise<void> {
-  const totalTime = 10000; // Total waiting time in milliseconds
-  const intervalTime = 100; // Interval time in milliseconds
+  
+  public async waitUntilResult(): Promise<void> {
+    const totalTime = 10000; // Total waiting time in milliseconds
+    const intervalTime = 100; // Interval time in milliseconds
 
-  const startTime = Date.now();
-  while (!this.result && Date.now() - startTime < totalTime) {
-    await new Promise(resolve => setTimeout(resolve, intervalTime));
+    const startTime = Date.now();
+    while (!this.result && Date.now() - startTime < totalTime) {
+      await new Promise((resolve) => setTimeout(resolve, intervalTime));
+    }
   }
-}
-
 }
