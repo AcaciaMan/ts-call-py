@@ -10,7 +10,7 @@ describe("sendPythonScript", () => {
     pythonScript.code = ["m_result = Yaml.dump(m_args)"];
     pythonScript.return = "m_result";
 
-    M_Config.main_con.send(pythonScript.getJSONAs64ByteEncoded());
+    M_Config.main_con.send(pythonScript.encode());
     await M_Config.main_con.waitUntilResult();
     console.log("Result:", M_Config.main_con.result);
     await new Promise((resolve) => setTimeout(resolve, 10000));

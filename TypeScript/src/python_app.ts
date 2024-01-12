@@ -1,5 +1,6 @@
 import { ChildProcess, spawn } from "child_process";
 import M_Config from "./m_config";
+import { PythonMessage, python_message_type } from "./python_message";
 export class PythonApp {
   private _app_id: string;
   private _child: ChildProcess;
@@ -44,8 +45,12 @@ export class PythonApp {
 
     if (this.child.stdout) {
       this.child.stdout.on("data", (data: Buffer) => {
-        console.log(`stdout: ${data}`);
-        this.result = data;
+        
+        const python_message = new PythonMessage(python_message_type.m_json);
+        python_message.decode(data);
+        this.result = python_message.received_json;
+        console.log(`stdout: ${this.result}`);
+
       });
     }
 
@@ -59,9 +64,8 @@ export class PythonApp {
   }
 
   public send(message: string): void {
-    const modifiedMessage = "#$%" + message + "%$#";
 
-    this.child.send(modifiedMessage, (error: Error | null) => {
+    this.child.send(message, (error: Error | null) => {
       if (error) {
         console.log(
           "Error sending message to Python subprocess: " + error.message
@@ -69,7 +73,7 @@ export class PythonApp {
       }
     });
   }
-  
+
   public async waitUntilResult(): Promise<void> {
     const totalTime = 10000; // Total waiting time in milliseconds
     const intervalTime = 100; // Interval time in milliseconds
