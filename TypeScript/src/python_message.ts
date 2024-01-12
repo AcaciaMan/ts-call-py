@@ -26,7 +26,7 @@ export interface python_script extends python_message {
 
 export class PythonMessage implements python_message {
   type: python_message_type;
-  received_data: Buffer = Buffer.from("", "latin1");
+  received_data: Buffer;
   received_json: object;
   constructor(type: python_message_type) {
     this.type = type;
@@ -45,6 +45,10 @@ export class PythonMessage implements python_message {
   }
 
 decode(data): void {
+    if (!this.received_data) {
+        this.received_data = Buffer.from("", "latin1");
+    }
+    
     this.received_data = Buffer.concat([this.received_data, data]);
 
     const jsonString = Buffer.from(this.received_data).toString("latin1");
@@ -63,16 +67,16 @@ decode(data): void {
         );
         this.received_data = Buffer.from("", "latin1");
         if(startIndex > 3) {
-            console.log(`stdout: ${jsonString.substring(3, startIndex)}`);
+            console.log(`recout: ${jsonString.substring(3, startIndex)}`);
         }
 
         if(endIndex !== jsonString.length-3) {
-            console.log(`stdout: ${jsonString.substring(endIndex+3, jsonString.length)}`);
+            console.log(`recout: ${jsonString.substring(endIndex+3, jsonString.length)}`);
         }
 
     } else if (startIndex === -1 ) {
-        this.received_data = Buffer.from("", "latin1");
-        console.log(`stdout: ${jsonString}`);
+        this.received_data = null;
+        console.log(`recout: ${jsonString}`);
     }
 }
 }
