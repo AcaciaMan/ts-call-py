@@ -54,6 +54,19 @@ class ChildExecScript(ChildExec):
             for x in self.message.json_object['declarations']:
                 for y in x.keys():
                     self.execs.append(y + ' = ' + json.dumps(x[y]))
+                    for z in x[y].keys():
+                        self.execs.append(y + '_' + z + ' = ' + y + '["' + z +'"]')
+
+        if 'code' in self.message.json_object:
+            for x in self.message.json_object['code']:
+                print('here1', x, flush=True)
+                self.execs.append(x)
+
+        if 'm_return' in self.message.json_object:
+            var = self.message.json_object['m_return']
+            # create dict with name "m_return" + "_dict"
+            print('here1', var, flush=True)
+            self.execs.append('child_message.m_return_dict["'+var+'"] = ' + var)        
 
         return self
 
@@ -66,15 +79,12 @@ class ChildExecFactory(object):
         """
         docstring
         """
-        print('here2', flush=True)
         if (message.json_object is None):
             return ChildExec()
         
-        print('here3', flush=True)
         if 'type' in message.json_object:
-            print(message.json_object['type'], flush=True)
+            print(message.json_object['type'])
             if message.json_object['type'] == ChildMessageType.python_script.name:
-                print('here5', flush=True)
                 childExecScript = ChildExecScript()
                 childExecScript.message = message
                 return childExecScript

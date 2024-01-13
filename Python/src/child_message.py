@@ -24,6 +24,7 @@ class ChildMessage(object):
         self.message = bytearray()
         self.decoded_message: bytes = None
         self.json_object = None
+        self.m_return_dict = {}
 
     def data_received(self, data: bytes):
         """
@@ -51,17 +52,23 @@ class ChildMessage(object):
         """
         self.json_object = json.loads(self.decoded_message)
 
-    def encode(self):
-        json_string = json.dumps(self.json_object)
+    def encode(self, jObj):
+        json_string = json.dumps(jObj)
 
         # Encode the string to base64
         encoded_string = "#$%" + base64.b64encode(json_string.encode()).decode(encoding='latin1') +  "%$#"
         return encoded_string
     
-    def reply(self):
+    def reply(self, jObj):
         """
         docstring
         """
-        os.write(1, self.encode().encode('latin1'))
+        os.write(1, self.encode(jObj).encode('latin1'))
         self.decoded_message = None
         self.json_object = None
+        self.m_return_dict = {}
+
+    def m_return_reply(self):
+        if len(self.m_return_dict.keys())>0:
+            self.reply(self.m_return_dict)
+
