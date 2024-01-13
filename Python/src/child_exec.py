@@ -1,6 +1,7 @@
 import json
 from typing import Any
 from child_message import ChildMessage, ChildMessageType
+import re
 
 from typing import TypedDict
 
@@ -43,6 +44,7 @@ class ChildExecScript(ChildExec):
         """
         docstring
         """
+        decl={}
         self.execs = []
         print('here', flush=True)
         if 'imports' in self.message.json_object:
@@ -54,12 +56,17 @@ class ChildExecScript(ChildExec):
             for x in self.message.json_object['declarations']:
                 for y in x.keys():
                     self.execs.append(y + ' = ' + json.dumps(x[y]))
+                    decl[y]=x[y]
+                    """
                     for z in x[y].keys():
                         self.execs.append(y + '_' + z + ' = ' + y + '["' + z +'"]')
+                    """
 
         if 'code' in self.message.json_object:
             for x in self.message.json_object['code']:
                 print('here1', x, flush=True)
+                # if x contains &{ and }, retrieve string between &{ and }
+                x = self.replace_args(x, decl)
                 self.execs.append(x)
 
         if 'm_return' in self.message.json_object:
@@ -69,6 +76,35 @@ class ChildExecScript(ChildExec):
             self.execs.append('child_message.m_return_dict["'+var+'"] = ' + var)        
 
         return self
+    
+    def replace_args(self, x:str, decl):
+        """
+        docstring
+        """
+        result = x
+        # Check if the string contains '&{' and '}'
+        if '&{' in x and '}' in x:
+            # Find the string between '&{' and '}'
+            results = re.findall(r'&\{(.*?)\}', x)
+            if results:
+                for y in results:
+                    result = result.replace('&{'+y+'}', self.stringify(y, decl[y]))
+
+        return result
+    
+    def stringify(self, s, d):
+        """
+        docstring
+        """
+        result = ' '
+        for x in d.keys():
+            result = result + x + '=' + s + '["' + x + '"]' + ', '
+
+        if len(result)>1:
+            result = result[0:-2]
+
+        return result
+
 
 class ChildExecFactory(object):
     """
