@@ -59,11 +59,11 @@ export class PythonApp {
     return this.child;
   }
 
-  public send(jObj: object): void {
-    this.sendStr(M_Config.m_channel.encode(jObj));
+  public async send(jObj: object) {
+    await this.sendStr(M_Config.m_channel.encode(jObj));
   }
 
-  public sendStr(message: string): void {
+  public async sendStr(message: string) {
     M_Config.m_channel.new_message();
     this.child.stdin.write(message, (error: Error | null) => {
       if (error) {
@@ -72,6 +72,8 @@ export class PythonApp {
         );
       }
     });
+
+    await this.waitUntilResult();
   }
 
   public async waitUntilResult(): Promise<void> {

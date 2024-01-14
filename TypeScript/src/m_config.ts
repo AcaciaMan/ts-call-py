@@ -21,8 +21,7 @@ class M_Config {
       pythonScript.code = ["bTerminate = True"];
       pythonScript.m_return = "bTerminate";
 
-      M_Config.main_con.send(pythonScript);
-      await M_Config.main_con.waitUntilResult();
+      await M_Config.main_con.send(pythonScript);
       console.log("Terminated:", JSON.stringify(M_Config.main_con.result));  
 
       // wait for the child process to terminate

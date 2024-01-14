@@ -7,10 +7,8 @@ describe('readTsConfig', () => {
     console.log("Config:", M_Config.config);
     console.log("Main con:", M_Config.main_con.child.pid);
     const m_python_message = new PythonMessage( python_message_type.m_json);
-    M_Config.main_con.send(m_python_message);
-    await M_Config.main_con.waitUntilResult();
-    M_Config.main_con.sendStr("Hello from VS Code!");
-    await M_Config.main_con.waitUntilResult();
+    await M_Config.main_con.send(m_python_message);
+    await M_Config.main_con.sendStr("Hello from VS Code!");
     await M_Config.destroy();
   }, 10000);
 });
