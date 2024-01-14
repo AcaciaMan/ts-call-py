@@ -28,6 +28,7 @@ class M_Config {
       await new Promise((resolve) => setTimeout(resolve, 500));
     
     await M_Config._main_con.child.kill();
+    M_Config._main_con = null;
   }
 
   static readTsConfig(tsConfig?: any) {
