@@ -7,6 +7,13 @@
     "cwd": "{package_path}",
     "PYTHONPATH": "{package_path}/src;{package_path}/tests"
   },
+    "py_prod": {
+    "python_path": "C:/Tools/Python312/python.exe",
+    "package_path": "C:/work/GitHub/ts-call-py/Python",
+    "child_process": "{package_path}/src/child_process.py",
+    "cwd": "{package_path}",
+    "PYTHONPATH": "{package_path}/src;{package_path}/tests"
+  },
 
   "message_app": {
     "python_path": "C:/Tools/Python312/python.exe",

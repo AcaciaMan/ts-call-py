@@ -1,6 +1,6 @@
 import { ChildProcess, spawn } from "child_process";
 import M_Config from "./m_config";
-import { PythonMessage, python_message_type } from "./python_message";
+import { PythonMessage, PythonScript, python_message_type } from "./python_message";
 export class PythonApp {
   private _app_id: string;
   private _child: ChildProcess;
@@ -60,6 +60,10 @@ export class PythonApp {
   }
 
   public async send(jObj: object) {
+    if (!this.child) {
+      this.callPythonScript();
+    }
+
     await this.sendStr(M_Config.m_channel.encode(jObj));
   }
 
@@ -81,8 +85,28 @@ export class PythonApp {
     const intervalTime = 100; // Interval time in milliseconds
 
     const startTime = Date.now();
-    while (!M_Config.m_channel.bReceivedResponse && Date.now() - startTime < totalTime) {
+    while (
+      !M_Config.m_channel.bReceivedResponse &&
+      Date.now() - startTime < totalTime
+    ) {
       await new Promise((resolve) => setTimeout(resolve, intervalTime));
     }
+  }
+
+  public async destroy() {
+    const pythonScript = new PythonScript();
+
+    pythonScript.code = ["bTerminate = True"];
+    pythonScript.m_return = "bTerminate";
+
+    await this.send(pythonScript);
+    console.log("Terminated:", JSON.stringify(this.result));
+
+    // wait for the child process to terminate
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    await this.child.kill();
+    this.child = null;
+
   }
 }

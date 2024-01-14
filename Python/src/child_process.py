@@ -32,11 +32,3 @@ while bTerminate is False:
 
 print('Terminated at step:', step_i, flush=True)
 
-
-'''
-    exec("""
-if i == 0:
-    print(json.dumps(child_message.json_object["declarations"]).encode(), i, flush=True)
-print('something', i, flush=True)         
-    """)
-'''

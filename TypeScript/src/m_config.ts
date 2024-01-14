@@ -1,8 +1,8 @@
 import fs from "fs";
-import path from "path";
+
 import { PythonApp } from "./python_app";
 import { PythonChannel } from "./python_channel";
-import { PythonScript } from "./python_message";
+import path from "path";
 
 // generate a class M_Config with static property
 // config that contains the parsed typescript.json file
@@ -16,18 +16,7 @@ class M_Config {
   private constructor() {} // Prevent instantiation
 
   public static async destroy() {
-      const pythonScript = new PythonScript();
-
-      pythonScript.code = ["bTerminate = True"];
-      pythonScript.m_return = "bTerminate";
-
-      await M_Config.main_con.send(pythonScript);
-      console.log("Terminated:", JSON.stringify(M_Config.main_con.result));  
-
-      // wait for the child process to terminate
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    
-    await M_Config._main_con.child.kill();
+    await M_Config.main_con.destroy();
     M_Config._main_con = null;
   }
 
@@ -52,8 +41,11 @@ class M_Config {
   static readTsConfig(tsConfig?: any) {
     if (!tsConfig) {
 
-      const currentFilePath = __filename;
-      const srcDirectories = M_Config.findSrcDirectories(currentFilePath);
+      // const currentFilePath = __filename;
+      const cwdName = __dirname;
+      //const cwdName = process.cwd();
+
+      const srcDirectories = M_Config.findSrcDirectories(cwdName);
       const tsConfigPaths: string[] = [];
       for (const srcDirectory of srcDirectories) {
         tsConfigPaths.push(path.join(srcDirectory, "ty_call_py.json"));
