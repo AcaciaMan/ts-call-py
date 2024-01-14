@@ -10,5 +10,6 @@ describe('readTsConfig', () => {
     await M_Config.main_con.send(m_python_message);
     await M_Config.main_con.sendStr("Hello from VS Code!");
     await M_Config.destroy();
+    console.log("End of test readTsConfig")
   }, 10000);
 });
