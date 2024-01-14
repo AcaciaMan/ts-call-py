@@ -31,12 +31,53 @@ class M_Config {
     M_Config._main_con = null;
   }
 
+    static findSrcDirectories(filePath: string): string[] {
+        const srcDirectories: string[] = [];
+
+        const currentDirectory = path.dirname(filePath);
+        const directories = currentDirectory.split(path.sep);
+
+        for (let i = 0; i < directories.length; i++) {
+          const directory = directories.slice(0, i + 1).join(path.sep);
+          const stats = fs.statSync(directory);
+
+          if (stats.isDirectory() && fs.existsSync(path.join(directory, "ty_call_py.json"))) {
+            srcDirectories.push(directory);
+          }
+        }
+
+        return srcDirectories;
+      }
+
   static readTsConfig(tsConfig?: any) {
     if (!tsConfig) {
-      const projectRoot = path.resolve(__dirname, "../");
-      const tsConfigPath = path.resolve(projectRoot, "typescript.json");
 
-      const tsConfigContent = fs.readFileSync(tsConfigPath, "utf-8");
+      const currentFilePath = __filename;
+      const srcDirectories = M_Config.findSrcDirectories(currentFilePath);
+      const tsConfigPaths: string[] = [];
+      for (const srcDirectory of srcDirectories) {
+        tsConfigPaths.push(path.join(srcDirectory, "ty_call_py.json"));
+      }
+
+      let tsConfigContent = "";
+      let foundTsConfigPath = "";
+
+      for (const tsConfigPath of tsConfigPaths) {
+        try {
+          tsConfigContent = fs.readFileSync(tsConfigPath, "utf-8");
+          foundTsConfigPath = tsConfigPath;
+          break;
+        } catch (error) {
+          // File not found, try the next path
+        }
+      }
+
+      if (!tsConfigContent) {
+        throw new Error("Unable to find ty_call_py.json file.");
+      }
+
+      console.log("Found ty_call_py.json at:", foundTsConfigPath);
+
       tsConfig = JSON.parse(tsConfigContent);
     }
 

@@ -1,7 +1,8 @@
 export class M_Logging {
-    static m_caller: string = ' ';
 
-    static log(message: string) {
-        console.log(this.m_caller, message);
+    static log(...messages: any[]) {
+        const caller = new Error().stack?.split('\n')[2].trim().replace('at ', '');
+        console.log(caller, ...messages);
     }
 }
+
