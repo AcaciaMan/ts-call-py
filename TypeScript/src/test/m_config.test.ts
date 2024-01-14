@@ -1,12 +1,16 @@
 import M_Config from '../m_config';
+import { PythonMessage, PythonScript, python_message_type } from '../python_message';
 
 describe('readTsConfig', () => {
   test("should read and parse typescript.json file", async () => {
     console.log("Main app:", M_Config.main_app);
     console.log("Config:", M_Config.config);
     console.log("Main con:", M_Config.main_con.child.pid);
-    M_Config.main_con.send("Hello from VS Code!");
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    M_Config.main_con.child.kill();
+    const m_python_message = new PythonMessage( python_message_type.m_json);
+    M_Config.main_con.send(m_python_message);
+    await M_Config.main_con.waitUntilResult();
+    M_Config.main_con.sendStr("Hello from VS Code!");
+    await M_Config.main_con.waitUntilResult();
+    await M_Config.destroy();
   }, 10000);
 });

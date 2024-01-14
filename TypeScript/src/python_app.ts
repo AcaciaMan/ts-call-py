@@ -44,8 +44,8 @@ export class PythonApp {
 
     if (this.child.stdout) {
       this.child.stdout.on("data", (data) => {
-        this.python_message.decode(data);
-        this.result = this.python_message.received_json;
+        M_Config.m_channel.decode(data);
+        this.result = M_Config.m_channel.received_json;
         console.log("stdout:", this.result);
       });
     }
@@ -59,12 +59,12 @@ export class PythonApp {
     return this.child;
   }
 
-  public new_result(): void {
-    this.python_message.received_json = null;
-    this.result = null;
+  public send(jObj: object): void {
+    this.sendStr(M_Config.m_channel.encode(jObj));
   }
 
-  public send(message: string): void {
+  public sendStr(message: string): void {
+    M_Config.m_channel.new_message();
     this.child.stdin.write(message, (error: Error | null) => {
       if (error) {
         console.log(
@@ -79,7 +79,7 @@ export class PythonApp {
     const intervalTime = 100; // Interval time in milliseconds
 
     const startTime = Date.now();
-    while (!this.result && Date.now() - startTime < totalTime) {
+    while (!M_Config.m_channel.bReceivedResponse && Date.now() - startTime < totalTime) {
       await new Promise((resolve) => setTimeout(resolve, intervalTime));
     }
   }
