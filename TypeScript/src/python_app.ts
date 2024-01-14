@@ -38,8 +38,6 @@ export class PythonApp {
           ...process.env,
           PYTHONPATH: this.app_params.PYTHONPATH,
         },
-        stdio: ["pipe", "pipe", "pipe", "ipc", null],
-        serialization: "advanced",
         cwd: this.app_params.cwd,
       }
     );
@@ -67,7 +65,7 @@ export class PythonApp {
   }
 
   public send(message: string): void {
-    this.child.send(message, (error: Error | null) => {
+    this.child.stdin.write(message, (error: Error | null) => {
       if (error) {
         console.log(
           "Error sending message to Python subprocess: " + error.message

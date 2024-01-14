@@ -1,22 +1,21 @@
 import os
-from time import sleep
-import json  # noqa: F401
+from child_channel import ChildChannel
 import child_exec  # noqa: F401
 
 from child_message import ChildMessage
 
-os.write(3,'{"dt" : "This is a test"}\n'.encode('latin-1'))
-
-print('child_process_test.py called')
 
 # Buffer to store the bytes read from the fd
 child_message = ChildMessage()
-sleep_secs = 0.2
+m_child_channel = ChildChannel()
+bTerminate = False
 
-for i in range(10):
+step_i = 0
+while bTerminate is False:
     'read in next message from parent Node process via built-in node IPC'
-    data = os.read(3, 10000)
-    child_message.data_received(data)
+    data = os.read(0, 10000)
+    m_child_channel.data_received(data)
+    child_message.json_object = m_child_channel.json_object
 
     m_child_exec = child_exec.ChildExecFactory().create_child_exec(child_message)
     m_child_exec()
@@ -24,12 +23,15 @@ for i in range(10):
         exec(x)
 
     if m_child_exec.execs is not None and len(m_child_exec.execs)> 0:
-        print('step:', i)
+        print('step:', step_i)
         print(m_child_exec.execs)
 
     child_message.m_return_reply()
     
-    sleep(sleep_secs)
+    step_i = step_i + 1
+
+print('Terminated at step:', step_i, flush=True)
+
 
 '''
     exec("""

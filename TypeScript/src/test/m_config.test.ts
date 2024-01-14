@@ -6,8 +6,7 @@ describe('readTsConfig', () => {
     console.log("Config:", M_Config.config);
     console.log("Main con:", M_Config.main_con.child.pid);
     M_Config.main_con.send("Hello from VS Code!");
-    await M_Config.main_con.waitUntilResult();
-    console.log("Result:", M_Config.main_con.result);
-    await new Promise(resolve => setTimeout(resolve, 10000));
-  }, 20000);
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    M_Config.main_con.child.kill();
+  }, 10000);
 });

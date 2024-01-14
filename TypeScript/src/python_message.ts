@@ -1,6 +1,5 @@
 export enum python_message_type {
   python_script = "python_script",
-  param = "param",
   m_json = "json",
 }
 
