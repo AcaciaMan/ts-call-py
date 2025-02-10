@@ -1,12 +1,11 @@
 import { ChildProcess, spawn } from "child_process";
 import M_Config from "./m_config";
-import { PythonMessage, PythonScript, python_message_type } from "./python_message";
+import { PythonMessage } from "./python_message";
 export class PythonApp {
   private _app_id: string;
   private _child: ChildProcess;
   public app_params: any;
   public result: any;
-  public python_message = new PythonMessage(python_message_type.m_json);
 
   constructor(app_id: string) {
     this.app_id = app_id;
@@ -94,12 +93,9 @@ export class PythonApp {
   }
 
   public async destroy() {
-    const pythonScript = new PythonScript();
+    const pythonTerminate = new PythonMessage("terminate", {}); // terminate the child process
 
-    pythonScript.code = ["bTerminate = True"];
-    pythonScript.m_return = "bTerminate";
-
-    await this.send(pythonScript);
+    await this.send(pythonTerminate);
     console.log("Terminated:", JSON.stringify(this.result));
 
     // wait for the child process to terminate
