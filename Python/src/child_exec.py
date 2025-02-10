@@ -35,8 +35,8 @@ class ChildExecScript(ChildExec):
         """
         self.execs = None
         print('here', flush=True)
-        self.execs = self.message.json_object['code']
-        self.message.args = self.message.json_object['args']
+        self.execs = self.message.json_object['m_function']
+        self.message.m_args = self.message.json_object['m_args']
 
         return self
     

@@ -10,11 +10,13 @@ class ChildMessage(object):
         """
         self.m_channel = ChildChannel()
         self.json_object = None
-        self.args = {}
-        self.m_return_dict = {}
+        self.m_function = None
+        self.m_args = {}
+        self.m_return = {}
 
     def m_return_reply(self):
-        self.m_channel.reply(self.m_return_dict)
+        self.m_channel.reply(self.m_return)
         self.json_object = None
-        self.args = {}
-        self.m_return_dict = {}
+        self.m_function = None
+        self.m_args = {}
+        self.m_return = {}

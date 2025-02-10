@@ -7,7 +7,7 @@ describe('readTsConfig', () => {
     console.log("Main app:", M_Config.main_app);
     console.log("Config:", M_Config.config);
     console.log("Main con:", M_Config.main_con.child.pid);
-    const m_python_message = new PythonMessage( "test1()", {});
+    const m_python_message = new PythonMessage( "test1()", {"something": 3});
     await M_Config.main_con.send(m_python_message);
     await M_Config.main_con.sendStr("Hello from VS Code!");
     await M_Config.destroy();

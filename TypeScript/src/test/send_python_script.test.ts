@@ -1,5 +1,5 @@
 import M_Config from "../m_config";
-import { PythonScript } from "../python_message";
+import { PythonMessage } from "../python_message";
 
 describe("sendPythonScript", () => {
   it("should send Python script as base64 encoded JSON", async () => {
