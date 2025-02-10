@@ -1,6 +1,7 @@
 {
-"imports": ["import Yaml", "import os"],
-"declarations": [{"m_args": "{something: 1}"}],
-"code":["m_result = Yaml.dump(m_args)"],
-"return": "m_result"
+  "function": "return_2",
+    "args": {
+        "a": 1,
+        "b": 2
+    }
 }
