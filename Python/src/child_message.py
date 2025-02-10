@@ -1,14 +1,4 @@
-from enum import IntEnum
-
 from child_channel import ChildChannel
-
-
-class ChildMessageType(IntEnum):
-    """
-    docstring
-    """
-    python_script = 1,
-    m_json = 2
 
 class ChildMessage(object):
     """
@@ -20,9 +10,13 @@ class ChildMessage(object):
         """
         self.m_channel = ChildChannel()
         self.json_object = None
-        self.m_return_dict = {}
+        self.m_function = None
+        self.m_args = {}
+        self.m_return = {}
 
     def m_return_reply(self):
-        self.m_channel.reply(self.m_return_dict)
+        self.m_channel.reply(self.m_return)
         self.json_object = None
-        self.m_return_dict = {}
+        self.m_function = None
+        self.m_args = {}
+        self.m_return = {}

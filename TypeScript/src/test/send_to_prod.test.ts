@@ -1,19 +1,11 @@
 import M_Config from "../m_config";
 import { M_Logging } from "../m_logging";
 import { PythonApp } from "../python_app";
-import { PythonScript } from "../python_message";
+import { PythonMessage } from "../python_message";
 
 describe("sendPythonScriptProd", () => {
   it("should send Python script to prod", async () => {
-    let pythonScript = new PythonScript();
-
-    pythonScript.imports = ["import yaml", "import os", "import json"];
-    pythonScript.declarations = [{ m_args: { obj: "str" } }, { m_result: {} }];
-    pythonScript.code = ["m_result = json.dumps(&{m_args})"];
-    //pythonScript.code = ["m_result = yaml.dump(m_args)"];
-    //pythonScript.code = ["m_result = m_args"];
-    pythonScript.m_return = "m_result";
-
+    let pythonScript = new PythonMessage("test1()", { something: 3 });
 
     const py_app = new PythonApp("py_prod");
 

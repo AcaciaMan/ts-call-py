@@ -102,18 +102,15 @@ function getStringBetweenCurlyBrackets(value: string): string | null {
 function walkJsonTree(obj: any, callback: (key: string, value: any) => void) {
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
-      const value = obj[key];
 
-      if (
-        typeof value === "string" &&
-        value.includes("{") &&
-        value.includes("}")
-      ) {
-        const m_result = getStringBetweenCurlyBrackets(value);
-        if (m_result) {
-          if (obj.hasOwnProperty(m_result)) {
-            obj[key] = value.replace(`{${m_result}}`, obj[m_result]);
-          }
+
+      const value = obj[key];
+      const regex = /{([^}]+)}/g;
+      let match;
+      while ((match = regex.exec(value)) !== null) {
+        const m_result = match[1];
+        if (obj.hasOwnProperty(m_result)) {
+          obj[key] = obj[key].replace(`{${m_result}}`, obj[m_result]);
         }
       }
       callback(key, value);
