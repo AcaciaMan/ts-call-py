@@ -4,6 +4,13 @@ import child_exec
 
 from child_message import ChildMessage
 
+def test1():
+    print('test1', flush=True)
+    return 'test1'
+
+def terminate():
+    global bTerminate
+    bTerminate = True
 
 # Buffer to store the bytes read from the fd
 child_message = ChildMessage()
@@ -19,8 +26,8 @@ while bTerminate is False:
 
     m_child_exec = child_exec.ChildExecFactory().create_child_exec(child_message)
     m_child_exec()
-    for x in m_child_exec.execs:
-        exec(x)
+    if m_child_exec.execs is not None:
+        exec(m_child_exec.execs)
 
     if m_child_exec.execs is not None and len(m_child_exec.execs)> 0:
         print('step:', step_i)

@@ -93,7 +93,7 @@ export class PythonApp {
   }
 
   public async destroy() {
-    const pythonTerminate = new PythonMessage("terminate", {}); // terminate the child process
+    const pythonTerminate = new PythonMessage("terminate()", {}); // terminate the child process
 
     await this.send(pythonTerminate);
     console.log("Terminated:", JSON.stringify(this.result));
